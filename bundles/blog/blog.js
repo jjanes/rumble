@@ -1,6 +1,6 @@
 var blog = {
-  VERSION: '1.0'  
-  AUTHORS: [
+  ver: '1.0'  
+  authors: [
     "john janes"
   ]
 }
