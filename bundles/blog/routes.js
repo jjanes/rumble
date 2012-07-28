@@ -1,4 +1,4 @@
-rumble.routes.register({
+rumble.components.routes.register({
   'blog/:blog': 'blog#view'
     
 });
