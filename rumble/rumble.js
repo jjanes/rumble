@@ -2,86 +2,69 @@ var fs = require('fs'); // require fs node module
 
 
 var rumble = new function() {
-  var _bundles = {};
-  
+  var bundles = {};
+  var self = this;
+
+  this.emit = function() {
+
+  }
+
+
+
   // bundle object, all bundle operations with be handled with this object
-  var bundle = function(bundle) {
-    var _bundle = bundle;
+  var bundle = function(args) {
+    if (typeof args.bundle == 'undefined') throw "Need to pass bundle as argument";
+    
+    var bundle = args.bundle; 
     
     var f = bundle.split('/');
-    f.push(f[f.length-1]+'.js');
-    f = f.join('/');
-    console.log(f); 
-    if (!fs.existsSync(f)) {
-        throw "Cannont find: "+f;
+    f.push(f[f.length-1]+'.js'); f = f.join('/');
+    
+    if (!fs.existsSync(f)) { 
+      throw "Cannont find: "+f; 
     }
-
-    console.log(JSON.stringify(f));
-
-    
-    
-    //  var f = bundle+'.js';
-  
-    
     
     var object  = require('../'+f);
+  
+    if (typeof object.bundle == 'function') {
+      // object.initialize(self);
+
+    } else if (typeof object.bundle == 'object') {
+
+    }
+  
+
+
 
 
 
   }
 
   var loadBundles = function() {
-    var bundles = new function()  {
+    var _bundles = new function()  {
       eval(fs.readFileSync('bundles.js','utf8'));
+      if (typeof bundles != 'object') throw "Need to set bundles hash table";
       return bundles;
     }
 
-    for (index in bundles) { 
-      var _bundle = bundles[index];
-      _bundles[index] = new bundle(_bundle);  
+
+    for (index in _bundles) { 
+      var _bundle = _bundles[index];
+      if (typeof bundles[index] == 'undefined') {
+        bundles[index] = new bundle({ bundle: _bundle, name: index });  
+      } 
     }
 
 
-    fs.readdir('bundles', function(err, list) {
-      for (index in list) {
-        var item  = list[index];
-        var f     = 'bundles/'+item+'/'+item+'.js';
-       
-
-
-
-        if (!fs.existsSync(f)) {
-          console.log('could not find init file for: '+item);
-        } else {
-          //var d = fs.readFileSync(f, 'utf8');
-          //console.log(d);
-        
-      
-
-
-        /*  
-          fs.readFileSync(f, 'utf8', function(err,data){
-            console.log('wtfabc');
-            if (err) {
-              console.log('error: ' + err);
-            } else {
-              console.log('++ ' + data); 
-            }
-          });
-          console.log('wtf123');
-        }
-
-        */
-        }
-      }
-    });
 
   }
 
 
-  console.log('>>> ');
+
+
+
+
   loadBundles();
 
-  console.log('end ');
 }
 
