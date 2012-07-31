@@ -3,28 +3,41 @@ var fs = require('fs'); // require fs node module
 
 var rumble = new function() {
   var _bundles = {};
+  var _path    = null;
+  var self     = this; 
   
   // bundle object, all bundle operations with be handled with this object
-  var bundle = function(bundle) {
-    var _bundle = bundle;
-    
-    var f = bundle.split('/');
-    f.push(f[f.length-1]+'.js');
-    f = f.join('/');
-    console.log(f); 
-    if (!fs.existsSync(f)) {
-        throw "Cannont find: "+f;
+  var bundle = function(bundle, name) {
+    var $this;
+    var _bundle = name; var object;
+    if (typeof _bundles[name] != 'undefined') 
+      throw new "bundle "+name+" already exists.";
+
+    var register = function(bundle) {
+      if (typeof bundle != 'string') throw "Invalid parameter passed as bundle name. requires string. "+typeof(bundle)+" passed.";
+      var f = bundle.split('/'); f.push(f[f.length-1]+'.js');f = f.join('/');
+       
+      if (!fs.existsSync(f)) throw "Cannont find: "+f;
+      var object  = require('../'+f);
+      _bundles[name] = $this;
     }
 
-    console.log(JSON.stringify(f));
+    register(bundle); 
+  
+    var initialize = function() {
 
-    
+
+    }
+
+    initialize();
+
+ 
+
     
     //  var f = bundle+'.js';
   
     
     
-    var object  = require('../'+f);
 
 
 
@@ -38,44 +51,9 @@ var rumble = new function() {
 
     for (index in bundles) { 
       var _bundle = bundles[index];
-      _bundles[index] = new bundle(_bundle);  
+      _bundles[index] = new bundle(_bundle, index);  
     }
-
-
-    fs.readdir('bundles', function(err, list) {
-      for (index in list) {
-        var item  = list[index];
-        var f     = 'bundles/'+item+'/'+item+'.js';
-       
-
-
-
-        if (!fs.existsSync(f)) {
-          console.log('could not find init file for: '+item);
-        } else {
-          //var d = fs.readFileSync(f, 'utf8');
-          //console.log(d);
-        
-      
-
-
-        /*  
-          fs.readFileSync(f, 'utf8', function(err,data){
-            console.log('wtfabc');
-            if (err) {
-              console.log('error: ' + err);
-            } else {
-              console.log('++ ' + data); 
-            }
-          });
-          console.log('wtf123');
-        }
-
-        */
-        }
-      }
-    });
-
+    console.log(JSON.stringify(_bundles));
   }
 
 
