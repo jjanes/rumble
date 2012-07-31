@@ -2,64 +2,82 @@ var fs = require('fs'); // require fs node module
 
 
 var rumble = new function() {
-  var _bundles = {};
-  var _path    = null;
-  var self     = this; 
-  
+  var bundles = {};
+  var self = this;
+  var f;            // temp var for storing file data
+  var object;       // var to store object
+
   // bundle object, all bundle operations with be handled with this object
-  var bundle = function(bundle, name) {
-    var $this;
-    var _bundle = name; var object;
-    if (typeof _bundles[name] != 'undefined') 
-      throw new "bundle "+name+" already exists.";
-
-    var register = function(bundle) {
-      if (typeof bundle != 'string') throw "Invalid parameter passed as bundle name. requires string. "+typeof(bundle)+" passed.";
-      var f = bundle.split('/'); f.push(f[f.length-1]+'.js');f = f.join('/');
-       
-      if (!fs.existsSync(f)) throw "Cannont find: "+f;
-      var object  = require('../'+f);
-      _bundles[name] = $this;
+  var bundle = function(args) {
+    if (typeof args.bundle == 'undefined') { 
+      throw new Error("Need to pass bundle as argument");
     }
 
-    register(bundle); 
-  
-    var initialize = function() {
-
-
+    var bundle = args.bundle; 
+    console.log("creating bundle object: "+bundle);
+    
+    var f = bundle.split('/');
+    f.push(f[f.length-1]+'.js'); f = f.join('/');
+    
+    if (!fs.existsSync(f)) { 
+      throw  new Error("Cannont find: "+f); 
     }
-
-    initialize();
-
- 
-
     
-    //  var f = bundle+'.js';
+    var object  = require('../'+f);
   
+    if (typeof object.bundle == 'function') {
+      // object.initialize(self);
+      // var object =  
+      console.log(JSON.stringify(object.bundle.apply()));
+      console.log('wtf1');
+    } else if (typeof object.bundle == 'object') {
+      console.log('wtf2');
+    }  
     
+    if (typeof object.bundle != 'object') {
+      // will want to throw and eror here at some point 
+      console.log('wtf');
+      return;
+    }
+    console.log(typeof object.bundle);
+    object.rumble = self;
     
-
-
-
+    object.test = function() {
+      console.log('test');
+    }
+   
+    if (typeof object.bundle.initialize == 'function') {
+        object.bundle.initialize.call();
+    }
+  
   }
 
   var loadBundles = function() {
-    var bundles = new function()  {
+    var _bundles = new function()  {
       eval(fs.readFileSync('bundles.js','utf8'));
+      if (typeof bundles != 'object') {
+        throw new Erorr("Need to set bundles hash table");
+      } 
       return bundles;
     }
 
-    for (index in bundles) { 
-      var _bundle = bundles[index];
-      _bundles[index] = new bundle(_bundle, index);  
+    for (index in _bundles) { 
+      var _bundle = _bundles[index];
+      if (typeof bundles[index] == 'undefined') {
+        bundles[index] = new bundle({ bundle: _bundle, name: index });  
+      } 
     }
-    console.log(JSON.stringify(_bundles));
+
+
+
   }
 
 
-  console.log('>>> ');
+
+
+
+
   loadBundles();
 
-  console.log('end ');
 }
 
