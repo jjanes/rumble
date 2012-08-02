@@ -1,10 +1,17 @@
 var rumble;
 
 exports.bundle = { 
-  initialize: function() {
-     
+  wait_for: {
+    '@bundles/ '
 
-            
+  },
+  share_with: {
+    '@bundles/{routes|blog}': function() {
+
+    }
+  },
+  initialize: function() {
+               
   },
   events: {
     hooks: {
@@ -12,7 +19,7 @@ exports.bundle = {
 
     },    
     detech: {
-      '@bundles/controller': function() {
+      '@bundles/*/controller': function() {
 
       }
     }

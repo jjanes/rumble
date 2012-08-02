@@ -1,6 +1,6 @@
 var fs = require('fs'); // require fs node module
 
-
+// all hooks will be done with 
 var rumble = new function() {
   var debug = 1;
   var bundles = {};
@@ -48,8 +48,6 @@ var rumble = new function() {
           this.test = function(){ 
             console.log('hooootooooy');
           }
-
-
         });
     }
     ///debug::
@@ -57,7 +55,7 @@ var rumble = new function() {
       console.log(" >>> finished initializing: "+bundle);  
     }
     //::debug
-  
+    console.log(sizeof(
   }
 
   var loadBundles = function() {
