@@ -2,6 +2,7 @@ var fs = require('fs'); // require fs node module
 
 
 var rumble = new function() {
+  var debug = 1;
   var bundles = {};
   var self = this;
   var f;            // temp var for storing file data
@@ -26,29 +27,36 @@ var rumble = new function() {
     var object  = require('../'+f);
   
     if (typeof object.bundle == 'function') {
-      // object.initialize(self);
-      // var object =  
-      console.log(JSON.stringify(object.bundle.apply()));
-      console.log('wtf1');
-    } else if (typeof object.bundle == 'object') {
-      console.log('wtf2');
-    }  
-    
-    if (typeof object.bundle != 'object') {
-      // will want to throw and eror here at some point 
-      console.log('wtf');
-      return;
+      // bundle returns as a function let invoke it.
+      if (debug) console.log("object.bundle function found");
+      object.bundle = new object.bundle;
+    } else if (typeof object.bundle != 'object' && typeof object.bundle != "function") {
+      if (debug) {
+        console.log(" >>>>> could not initialize: "+bundle+ ", typeof: "+typeof(object.bundle));
+      }
+      return false;
     }
-    console.log(typeof object.bundle);
-    object.rumble = self;
+     
     
-    object.test = function() {
-      console.log('test');
+    if (debug) {
+        console.log(JSON.stringify(object.bundle));
+        console.log("typeof "+bundle+".initialize " + typeof(object.bundle.initialize));
     }
-   
     if (typeof object.bundle.initialize == 'function') {
-        object.bundle.initialize.call();
+        console.log("Initializing bundle : "+bundle);
+        object.bundle.initialize.apply(new function(){
+          this.test = function(){ 
+            console.log('hooootooooy');
+          }
+
+
+        });
     }
+    ///debug::
+    if (debug) {
+      console.log(" >>> finished initializing: "+bundle);  
+    }
+    //::debug
   
   }
 
@@ -61,23 +69,14 @@ var rumble = new function() {
       return bundles;
     }
 
+    // interate through each bundle and create the new bundle object 
     for (index in _bundles) { 
       var _bundle = _bundles[index];
       if (typeof bundles[index] == 'undefined') {
         bundles[index] = new bundle({ bundle: _bundle, name: index });  
       } 
     }
-
-
-
   }
-
-
-
-
-
-
   loadBundles();
-
 }
 

@@ -1,8 +1,5 @@
-rumble.components.routes.register({
-  'blog/:blog': 'blog#view'
+'blog/:blog': 'blog#view'
     
-});
-
 
 
 

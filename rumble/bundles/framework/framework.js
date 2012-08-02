@@ -1,25 +1,25 @@
 var rumble;
 
-exports.bundle = function() {
-  return {
-    intilaize: function() {
-       
-    
-               
-    },
-    events: {
-      controller: {
-        loaded: function(bundle) {
+exports.bundle = { 
+  initialize: function() {
+     
 
-        }
+            
+  },
+  events: {
+    hooks: {
+
+
+    },    
+    detech: {
+      '@bundles/controller': function() {
+
       }
-
-
-
     }
-
-
+  
+          
   }
 
 
 }
+

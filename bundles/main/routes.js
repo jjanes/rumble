@@ -1,0 +1,2 @@
+"/":"main",
+"/contact":"main#contact"

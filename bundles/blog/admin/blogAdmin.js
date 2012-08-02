@@ -1,16 +1,17 @@
 exports.blogAdmin = {
-  fields: {
-    title: {
-
+  fields: [
+    {
+      name: title, 
+      css: 'width: 100'
     },
-    content:  {
-
+    {
+      name: content
     },
-    tags: {
-
+    { 
+      name: tags
     }
 
-  }
+  ],
   events: {
       save: function() {
 
