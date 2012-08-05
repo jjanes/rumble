@@ -7,55 +7,71 @@ var rumble = new function() {
   var self = this;
   var f;            // temp var for storing file data
   var object;       // var to store object
+  this.loaded = false; 
 
+  // bundle base class
+  var bundleBase = function(bundle) {
+    var initialize = function() {
+
+    }
+    this.test = function() { console.log('wtf'); }
+    this.parent = function() { }
+    
+    // actually extend the object
+    // interate through every public prop/meth of the target object and attach it to this.
+    for (index in bundle.bundle) { 
+      this[index] = bundle.bundle[index]; 
+    }
+  
+  }
+   
   // bundle object, all bundle operations with be handled with this object
   var bundle = function(args) {
-    if (typeof args.bundle == 'undefined') { 
-      throw new Error("Need to pass bundle as argument");
+     // initialize function for bundle.. 
+    this.initialize = function() {
+      if (typeof object.bundle.initialize == 'function') {  // 
+        if (debug){ 
+          console.log("Initializing bundle : "+bundle);
+        }
+        object.bundle.initialize.apply(new bundleBase(object));
+      }
     }
-
+  
+    if (typeof args.bundle == 'undefined') {  throw new Error("Need to pass bundle as argument"); }
     var bundle = args.bundle; 
-    console.log("creating bundle object: "+bundle);
+    if (debug) { console.log("creating bundle object: "+bundle); }
     
     var f = bundle.split('/');
-    f.push(f[f.length-1]+'.js'); f = f.join('/');
+    f.push(f[f.length-1]+'.js'); 
     
-    if (!fs.existsSync(f)) { 
-      throw  new Error("Cannont find: "+f); 
-    }
+    f = f.join('/');
+    
+    if (!fs.existsSync(f)) {  throw  new Error("Cannont find: "+f); }
     
     var object  = require('../'+f);
-  
+ 
     if (typeof object.bundle == 'function') {
       // bundle returns as a function let invoke it.
       if (debug) console.log("object.bundle function found");
       object.bundle = new object.bundle;
     } else if (typeof object.bundle != 'object' && typeof object.bundle != "function") {
-      if (debug) {
-        console.log(" >>>>> could not initialize: "+bundle+ ", typeof: "+typeof(object.bundle));
-      }
+      if (debug) { console.log(" >>>>> could not initialize: "+bundle+ ", typeof: "+typeof(object.bundle)); }
       return false;
     }
      
     
     if (debug) {
         console.log(JSON.stringify(object.bundle));
-        console.log("typeof "+bundle+".initialize " + typeof(object.bundle.initialize));
     }
-    if (typeof object.bundle.initialize == 'function') {
-        console.log("Initializing bundle : "+bundle);
-        object.bundle.initialize.apply(new function(){
-          this.test = function(){ 
-            console.log('hooootooooy');
-          }
-        });
+     
+  
+    if (typeof object.bundle.events  == 'object') {
+      
+    
     }
-    ///debug::
-    if (debug) {
-      console.log(" >>> finished initializing: "+bundle);  
-    }
-    //::debug
-    console.log(sizeof(
+    this.loaded = true;
+
+
   }
 
   var loadBundles = function() {
@@ -71,10 +87,27 @@ var rumble = new function() {
     for (index in _bundles) { 
       var _bundle = _bundles[index];
       if (typeof bundles[index] == 'undefined') {
-        bundles[index] = new bundle({ bundle: _bundle, name: index });  
+        var b = new bundle({ bundle: _bundle, name: index });  
+        if (b.loaded)  { 
+            bundles[index] = b;
+        } else
+            else console.log('did not load ' + index);
+        }
       } 
     }
   }
+  
   loadBundles();
+
+  for (index in bundles) {
+    if (debug) { console.log(' ... init: ' + index); }
+    bundles[index].initialize();
+
+    //debug::
+    if (debug) { console.log(" >>> finished initializing: "+index); }
+    //::debug
+
+  }
+
 }
 
