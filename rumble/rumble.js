@@ -19,9 +19,7 @@ var rumble = new function() {
     
     // actually extend the object
     // interate through every public prop/meth of the target object and attach it to this.
-    for (index in bundle.bundle) { 
-      this[index] = bundle.bundle[index]; 
-    }
+    for (index in bundle.bundle) { this[index] = bundle.bundle[index]; }
   
   }
    
@@ -100,9 +98,10 @@ var rumble = new function() {
   loadBundles();
 
   for (index in bundles) {
-    if (debug) { console.log(' ... init: ' + index); }
+    //debug::
+    if (debug) { console.log(' ... initializing bundle: ' + index); }
+    //::debug
     bundles[index].initialize();
-
     //debug::
     if (debug) { console.log(" >>> finished initializing: "+index); }
     //::debug
@@ -111,3 +110,6 @@ var rumble = new function() {
 
 }
 
+
+
+// maybe someday millions of people will look at this code (8/4/12)
