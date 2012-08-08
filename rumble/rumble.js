@@ -8,21 +8,19 @@ var rumble = new function() {
   var f;            // temp var for storing file data
   var object;       // var to store object
 
+  
+  
   // bundle object, all bundle operations with be handled with this object
   var bundle = function(args) {
-    if (typeof args.bundle == 'undefined') { 
-      throw new Error("Need to pass bundle as argument");
-    }
-
+    if (typeof args.bundle == 'undefined') {  throw new Error("Need to pass bundle as argument"); }
+    
     var bundle = args.bundle; 
     console.log("creating bundle object: "+bundle);
     
     var f = bundle.split('/');
     f.push(f[f.length-1]+'.js'); f = f.join('/');
     
-    if (!fs.existsSync(f)) { 
-      throw  new Error("Cannont find: "+f); 
-    }
+    if (!fs.existsSync(f)) { throw  new Error("Cannont find: "+f); }
     
     var object  = require('../'+f);
   
@@ -37,11 +35,15 @@ var rumble = new function() {
       return false;
     }
      
+  
+
     
+
     if (debug) {
         console.log(JSON.stringify(object.bundle));
         console.log("typeof "+bundle+".initialize " + typeof(object.bundle.initialize));
     }
+
     if (typeof object.bundle.initialize == 'function') {
         console.log("Initializing bundle : "+bundle);
         object.bundle.initialize.apply(new function(){
@@ -50,12 +52,11 @@ var rumble = new function() {
           }
         });
     }
+
     ///debug::
-    if (debug) {
-      console.log(" >>> finished initializing: "+bundle);  
-    }
+    if (debug) { console.log(" >>> finished initializing: "+bundle); }
     //::debug
-    console.log(sizeof(
+  
   }
 
   var loadBundles = function() {
