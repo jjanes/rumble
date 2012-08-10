@@ -1,4 +1,7 @@
 var fs = require('fs'); // require fs node module
+// check directory structure 
+var cwd = process.cwd();
+var ru  = require(cwd+'/rumble/lib/ru.js');
 
 // all hooks will be done with 
 var rumble = new function() {
@@ -11,18 +14,50 @@ var rumble = new function() {
 
   // bundle base class
   var bundleBase = function(bundle) {
+    var index;
     var initialize = function() {
+       
 
     }
-    this.test = function() { console.log('wtf'); }
-    this.parent = function() { }
+    this.test   = function() { 
+      console.log('wtf'); 
+    }
+    this.parent = function() { 
     
+    }
     // actually extend the object
     // interate through every public prop/meth of the target object and attach it to this.
-    for (index in bundle.bundle) { this[index] = bundle.bundle[index]; }
+    for (index in bundle.bundle) this[index] = bundle.bundle[index]; 
+  
+    if (typeof this.events == 'object') {
+        if (typeof this.events.wait_for == 'object') {
+
+        }
+        if (typeof this.events.hooks == 'object') {
+    
+        }    
+        if (typeof this.events.detech == 'object') {
+          for (index in this.events.detech) {
+            
+          }
+
+        }
+
+    }
+
+    this.emit = function() { 
+
+
+    }
+  
+
+
+
   
   }
-   
+ 
+
+
   // bundle object, all bundle operations with be handled with this object
   var bundle = function(args) {
      // initialize function for bundle.. 
@@ -39,9 +74,13 @@ var rumble = new function() {
     var bundle = args.bundle; 
     if (debug) { console.log("creating bundle object: "+bundle); }
     
+    var dir = bundle;
+    ru.getStructSync(bundle); 
+    
+
+
     var f = bundle.split('/');
     f.push(f[f.length-1]+'.js'); 
-    
     f = f.join('/');
     
     if (!fs.existsSync(f)) {  throw  new Error("Cannont find: "+f); }
@@ -56,8 +95,7 @@ var rumble = new function() {
       if (debug) { console.log(" >>>>> could not initialize: "+bundle+ ", typeof: "+typeof(object.bundle)); }
       return false;
     }
-     
-    
+
     if (debug) {
         console.log(JSON.stringify(object.bundle));
     }
@@ -68,8 +106,6 @@ var rumble = new function() {
     
     }
     this.loaded = true;
-
-
   }
 
   var loadBundles = function() {
@@ -88,8 +124,8 @@ var rumble = new function() {
         var b = new bundle({ bundle: _bundle, name: index });  
         if (b.loaded)  { 
             bundles[index] = b;
-        } else
-            else console.log('did not load ' + index);
+        } else {
+            console.log('did not load ' + index);
         }
       } 
     }

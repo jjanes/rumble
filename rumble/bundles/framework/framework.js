@@ -2,7 +2,6 @@ var rumble;
 var controllers = {};
 
 exports.bundle = { 
-
   initialize: function() {
     
 
@@ -14,11 +13,13 @@ exports.bundle = {
 
     },    
     hooks: {
+    
 
 
     },    
     detech: {
-      '@bundles/*/controller': function() {
+      '@bundles/*/controller/*': function() {
+         
 
       }
     }
