@@ -29,8 +29,9 @@ var rumble = new function() {
       var i = 0;
       if (typeof $hooks[event] == 'object') {
         var index; for (index in $hooks[event]) {
-          var v = $hooks[event][index].hook; 
-          if (typeof(v) == "function") { v(event, _self); }
+          var f = $hooks[event][index].hook; 
+          if (typeof(v) == "function")  
+            f(event, _self); 
           i++;
         }
       }
