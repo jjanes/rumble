@@ -25,13 +25,21 @@ var rumble = new function() {
     for (index in bundle.bundle) this[index] = bundle.bundle[index]; 
   
      // emit function 
-    this.emit = function(event) { 
+    this.emit = function(event, callback) { 
+      var i = 0;
       if (typeof $hooks[event] == 'object') {
         var index; for (index in $hooks[event]) {
           var v = $hooks[event][index].hook; 
           if (typeof(v) == "function") { v(event, _self); }
+          i++;
         }
       }
+      if (typeof(callback) == 'function') {
+        callback.call({
+          total: i    
+        });
+      }
+
     }
     
     this.hook = function(hook, caller) {

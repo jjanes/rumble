@@ -4,7 +4,8 @@ exports.bundle = {
   initialize: function() {
       self = this;
       this.emit('framework.loaded', function() {
-          alert('test')
+        console.log('WOOOOOOOT SAUCH')
+          
       }); 
   },
   events: {
@@ -14,7 +15,7 @@ exports.bundle = {
     hooks: {
       'framework.loaded': function() {
          
-      
+        %
       }
 
     },    
