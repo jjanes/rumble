@@ -12,33 +12,36 @@ var rumble = new function() {
   var object;       // var to store object
   this.loaded = false;
   var $hooks = {};
-  var _hook = function(event) {
-    if (typeof $hooks[event] == 'object') {
-      var index;
-      for (index in $hooks[event]) {
-        var v =  $hooks[event][index].hook; 
-        if (typeof(v) == "function") { v.call(); }
-      }
-    }
-  }
-
+ 
   // bundle base class
   var bundleBase = function(bundle) {
     var _self = this;
     var index;
     var initialize = function() {
     }
-    this.test   = function() { 
-      console.log('wtf'); 
-    }
-    this.parent = function() { 
-    
-    }
 
     // actually extend the object
     // interate through every public prop/meth of the target object and attach it to this.
     for (index in bundle.bundle) this[index] = bundle.bundle[index]; 
   
+     // emit function 
+    this.emit = function(event) { 
+      if (typeof $hooks[event] == 'object') {
+        var index; for (index in $hooks[event]) {
+          var v = $hooks[event][index].hook; 
+          if (typeof(v) == "function") { v(event, _self); }
+        }
+      }
+    }
+    
+    this.hook = function(hook, caller) {
+      var t = _self.events.hooks;
+      if (typeof _self.events.hooks[hook] == 'function') { 
+        _self.events.hooks[hook].call(caller);
+      }
+    }
+ 
+    // setup events 
     if (typeof this.events == 'object') {
       
       if (typeof this.events.wait_for == 'object') {
@@ -52,7 +55,7 @@ var rumble = new function() {
             if (typeof $hooks[index] == 'undefined') {
               $hooks[index] = [];
             }
-            $hooks[index].push(_self);
+            $hooks[index].push(this);
           }
         }
 
@@ -65,21 +68,7 @@ var rumble = new function() {
       }
     }
 
-    // emit function 
-    this.emit = function(event) { 
-      console.log('emited');
-      _hook(event);
-
-    }
-    this.hook = function(hook) {
-      var t = _self.events.hooks;
-      console.log(typeof(t) + ' @@@ ' + JSON.stringify(t));
-      if (typeof _self.events.hooks[hook] == 'function') { 
-      console.log('CAPTIAN HOOOKZZZZZZZZZZZZZZZ');
-        _self.events.hooks[hook].call();
-      }
-    }
-  }
+ }
   // end of bundle base clase
  
 
