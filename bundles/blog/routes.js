@@ -3,3 +3,14 @@
 
 
 
+
+
+
+var dir = {
+        path: 'home/',
+        directories: {
+
+
+        }, 
+        files
+}
