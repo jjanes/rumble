@@ -17,9 +17,9 @@ exports.bundle = {
       }
 
     },    
-    detech: {
-      '@bundles/*/controller/*': function(match) {
-          var bundlename = match[0];
+    detect: {
+    '@bundles/*/controller/*': function(match) {
+        var bundlename = match[0];
           var controller = match[1];
          
 

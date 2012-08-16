@@ -1,2 +1,2 @@
 "/":"main",
-"/contact":"main#contact"
+"/contact":{ controller: "main#contact", as: 'contact' } 
