@@ -3,7 +3,7 @@ var self;
 exports.bundle = { 
   initialize: function() {
       self = this;
-      this.emit('routes.loaded', function() {
+      self.emit('routes.loaded', function() {
           
       }); 
   },
@@ -12,12 +12,16 @@ exports.bundle = {
 
     },    
     hooks: {
-      'framework.loaded': function(sender) {
-        sender. 
+      'framework.loaded': function(args, sender) {
+        
+      },
+      'webserver.request': function(args) {
+        for (index in args) 
+          console.log(' @@@' + index + ' : ' + typeof(args[index]));
         console.log('great');
-
+        console.log( typeof(args.req ) ) 
+          console.log( args.req.url ); 
       }
-
     },    
     detect: {
     '@bundles/*/routes.js': function(match) {

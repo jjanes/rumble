@@ -14,8 +14,10 @@ exports.bundle = {
     hooks: {
       'framework.loaded': function() {
          
+      },
+      'webserver.request': function() {
+      
       }
-
     },    
     detect: {
     '@bundles/*/controller/*': function(match) {

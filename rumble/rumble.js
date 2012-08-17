@@ -28,14 +28,20 @@ var rumble = new function() {
       console.log('add func/methd ' + index);
     }
      // emit function 
-    this.emit = function(event, callback) { 
+    this.emit = function(event, args, callback) {
+      if (debug) {
+        console.log('emitted event: ' + event);
+      }
       var i = 0;
     
-      if (typeof $hooks[event] == 'object') {
+      if (typeof $hooks[event] === 'object') {
         for (var index in $hooks[event]) {
+          if (debug) {
+            console.log('attemping to hook ' + event + ' on ' + index);
+          }
           var f = $hooks[event][index].hook; 
-          if (typeof(f) == "function") { 
-            f(event, _self); 
+          if (typeof(f) === "function") { 
+            f(event, args, _self); 
           } else {
           }
           i++;
@@ -49,11 +55,16 @@ var rumble = new function() {
 
     }
     
-    this.hook = function(hook, caller) {
+    this.hook = function(hook, args, caller) {
+      if (debug) { 
+        console.log('captian hoookkkkkzzzz, arrrrrrrrrrrrrrrr ' +  typeof(_self.events.hooks[hook]) );
+      } 
       var t = _self.events.hooks;
-      if (typeof _self.events.hooks[hook] == 'function') { 
-        _self.events.hooks[hook].call(caller);
-      }
+      if (typeof(_self.events.hooks[hook]) === "undefined") 
+        return false;
+
+      var f = _self.events.hooks[hook];
+      if (typeof f === 'function') f(args,caller);
     }
  
     // setup events 
