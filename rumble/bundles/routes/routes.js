@@ -16,10 +16,6 @@ exports.bundle = {
         
       },
       'webserver.request': function(args) {
-        for (index in args) 
-          console.log(' @@@' + index + ' : ' + typeof(args[index]));
-        console.log('great');
-        console.log( typeof(args.req ) ) 
           console.log( args.req.url ); 
       }
     },    

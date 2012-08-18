@@ -29,42 +29,30 @@ var rumble = new function() {
     }
      // emit function 
     this.emit = function(event, args, callback) {
-      if (debug) {
-        console.log('emitted event: ' + event);
-      }
+      if (debug) { console.log('emitted event: ' + event); }
       var i = 0;
     
       if (typeof $hooks[event] === 'object') {
         for (var index in $hooks[event]) {
-          if (debug) {
-            console.log('attemping to hook ' + event + ' on ' + index);
-          }
+          if (debug) { console.log('attemping to hook ' + event + ' on ' + index); }
           var f = $hooks[event][index].hook; 
-          if (typeof(f) === "function") { 
-            f(event, args, _self); 
-          } else {
-          }
+          if (typeof(f) === "function") f(event, args, _self); 
+          // some day we might want to add an else here  
           i++;
         }
       }
       if (typeof(callback) == 'function') {
-        callback.call({
-          total: i    
-        });
+        callback.call({ total: i });
       }
 
     }
     
     this.hook = function(hook, args, caller) {
-      if (debug) { 
-        console.log('captian hoookkkkkzzzz, arrrrrrrrrrrrrrrr ' +  typeof(_self.events.hooks[hook]) );
-      } 
+      if (debug) { console.log('captian hoookkkkkzzzz, arrrrrrrrrrrrrrrr ' +  typeof(_self.events.hooks[hook]) ); } 
       var t = _self.events.hooks;
-      if (typeof(_self.events.hooks[hook]) === "undefined") 
-        return false;
+      if (typeof(_self.events.hooks[hook]) === "undefined") return false;
 
-      var f = _self.events.hooks[hook];
-      if (typeof f === 'function') f(args,caller);
+      var f = _self.events.hooks[hook]; if (typeof f === 'function') f(args,caller);
     }
  
     // setup events 
@@ -73,21 +61,19 @@ var rumble = new function() {
 
       }
 
-      if (typeof this.events.hooks == 'object') {
-        var index;
-        for (index in this.events.hooks) { 
-          if (typeof(this.events.hooks[index])=="function") {
-            if (typeof $hooks[index] == 'undefined') {
-              $hooks[index] = [];
-            }
+      if (typeof this.events.hooks==="object") {
+        for (var index in this.events.hooks) { 
+          if (typeof this.events.hooks[index]==="function") {
+            if (typeof $hooks[index]==="undefined") $hooks[index] = [];
             $hooks[index].push(this);
           }
         }
       }    
-      if (typeof this.events.detect == 'object') {
-        var index;
-        for (index in this.events.detect) {
-          
+      if (typeof this.events.detect==="object") {
+        for (var index in this.events.detect) {
+          if (typeof $detect[index]==="undefined") $detect[index] = []; 
+          if (debug) { console.log('detecting ' + index); }
+          $detect[index].push(this);
         }
       }
     } else {
@@ -105,10 +91,8 @@ var rumble = new function() {
      // initialize function for bundle.. 
     this.initialize = function() {
       object.bundle.initialize.call(object.bundle);
-      if (typeof object.bundle.initialize == 'function') {  // 
-        if (debug){ 
-          console.log("Initializing bundle : "+bundle);
-        }
+      if (typeof object.bundle.initialize==='function') {  // 
+        if (debug)  console.log("Initializing bundle : "+bundle);
       }
     }
     
@@ -152,7 +136,7 @@ var rumble = new function() {
     if (debug) { console.log(JSON.stringify(object.bundle)); }
      
   
-    if (typeof object.bundle.events  == 'object') {
+    if (typeof object.bundle.events==="object") {
       
     
     }
@@ -186,7 +170,7 @@ var rumble = new function() {
   
   loadBundles();
 
-  for (index in bundles) {
+  for (var index in bundles) {
 
     //debug::
     if (debug) { console.log(' ... initializing bundle: ' + index); }
@@ -197,6 +181,16 @@ var rumble = new function() {
     //::debug
 
   }
+
+
+  // bundle file detection gotta love this feature
+  for (var match in $detect) { 
+    var caller = $detect[match];
+    if (debug) console.log('>>> detecting file: ' + match);
+  
+  }
+
+
 
 }
 
