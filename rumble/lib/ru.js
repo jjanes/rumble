@@ -24,3 +24,22 @@ exports.getStructSync =  getStructSync = function(path) {
   return struct;
 }
 
+exports.getAllFiles =  getAllFiles = function(path) {
+  var _files = []; 
+  var files = fs.readdirSync(path);
+  for (index in files) {
+    var r = path+'/'+files[index];
+    var s = fs.statSync(r);
+    if (typeof s == 'undefined') continue;      
+    if (s.isDirectory()) {
+      var _f =  getAllFiles(r); 
+      for (var index in _f) { 
+        _files.push(_f[index]);
+      }
+    } else { 
+        _files.push(r);
+    }
+  }
+  return _files;
+}
+

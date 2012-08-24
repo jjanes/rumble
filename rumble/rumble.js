@@ -125,9 +125,7 @@ var rumble = new function() {
       // bundle returns as a function let invoke it.
       object.bundle = new bundleBase(new object.bundle);
     } else if (typeof object.bundle != 'object' && typeof object.bundle != "function") {
-      if (debug) { 
-        console.log(" >>>>> could not initialize: "+bundle+ ", typeof: "+typeof(object.bundle)); 
-      }
+      if (debug) {  console.log(" >>>>> could not initialize: "+bundle+ ", typeof: "+typeof(object.bundle)); }
       return false;
     } else {
       object.bundle = new bundleBase(object); 
@@ -135,7 +133,6 @@ var rumble = new function() {
 
     if (debug) { console.log(JSON.stringify(object.bundle)); }
      
-  
     if (typeof object.bundle.events==="object") {
       
     
@@ -171,7 +168,6 @@ var rumble = new function() {
   loadBundles();
 
   for (var index in bundles) {
-
     //debug::
     if (debug) { console.log(' ... initializing bundle: ' + index); }
     //::debug
@@ -184,12 +180,29 @@ var rumble = new function() {
 
 
   // bundle file detection gotta love this feature
+  var _files = ru.getAllFiles(process.cwd())
+  
   for (var match in $detect) { 
     var caller = $detect[match];
     if (debug) console.log('>>> detecting file: ' + match);
+    var re = new RegExp(/@\w+\//);
+    if (re.test(match)) { 
+        var m = re.exec(match);
+        console.log(JSON.stringify(m));
+        switch (m[0]) { 
+          case '@bundles/':
+            console.log('wtf');
+            break;
+
+        }
+    } else {
+    
+    
+    }
+  
   
   }
-
+   
 
 
 }
